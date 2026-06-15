@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------------
+  # FASTAPI BACKEND INFERENCE SERVICE
+  # -------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ml_inference_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/workspace/app
+    restart: unless-stopped
+    networks:
+      - platform_network
+
+  # -------------------------------------------------------------------
+  # FLASK USER INTERFACE FRONTEND SERVICE
+  # -------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flask_web_frontend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./frontend/app:/workspace/app
+      - ./frontend/templates:/workspace/templates
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - platform_network
+
+networks:
+  platform_network:
+    driver: bridge

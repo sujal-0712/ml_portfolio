@@ -1,0 +1,44 @@
+# =====================================================================
+# UNIFIED ML PLATFORM GATEWAY - PRODUCTION GITIGNORE
+# =====================================================================
+
+# 1. Python Execution & Bytecode Caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 2. Local Logging & Operational Subsystems
+*.log
+mlflow_execution.log
+mlflow_exceptions.log
+mlflow_production.log
+mlflow_errors.log
+
+# 3. Local Databases & MLOps State Tracking
+mlflow.db
+mlruns/
+.mlflow/
+
+# 4. OS Specific Metadata System Files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 5. IDE Configurations
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 6. Container Runtime States
+.docker/
