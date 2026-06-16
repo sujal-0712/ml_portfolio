@@ -1,24 +1,30 @@
-# =====================================================================
-# FLASK FRONTEND MICROSERVICE DOCKERFILE
-# =====================================================================
+FROM python:3.12-slim AS builder
+
+WORKDIR /app
+
+ENV UV_COMPILE_BYTECODE=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && cp /root/.local/bin/uv /bin/uv
+
+COPY requirements.txt .
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    /bin/uv pip install --system -r requirements.txt
+
 FROM python:3.12-slim
 
-# Prevent Python from writing .pyc caching files and buffer streams
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR /app
 
-WORKDIR /workspace
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Cache layer optimization: Install pip dependencies first
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
 
-# Copy server scripts and user interface HTML views into the container filesystem
-COPY ./app ./app
-COPY ./templates ./templates
-
-# Open the production web interface port
 EXPOSE 5000
 
-# Execute Gunicorn binding to all interfaces on port 5000, using 4 execution workers
-CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:5000", "app.server:app"]
+CMD ["python", "app/server.py"]

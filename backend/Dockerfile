@@ -1,30 +1,35 @@
-# =====================================================================
-# FASTAPI BACKEND MICROSERVICE DOCKERFILE (RUST-INSULATED NETWORK)
-# =====================================================================
-FROM python:3.12-slim
+# Use the standard slim python image directly to bypass registry namespace bugs
+FROM python:3.12-slim AS builder
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR /app
 
-WORKDIR /workspace
+ENV UV_COMPILE_BYTECODE=1
 
-# Install system dependencies required for gradient boosting compilation
+# Install curl cleanly so we can pull the official installer binary directly from Astral's servers
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libgomp1 \
+    curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements manifest
+# Download and run the standalone uv installation script securely
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && cp /root/.local/bin/uv /bin/uv
+
 COPY requirements.txt .
 
-# Swapping standard pip for the Rust-backed 'uv' engine.
-# This prevents 'IncompleteRead' failures on large 300MB wheels.
-RUN pip install --no-cache-dir uv && \
-    uv pip install --system --no-cache -r requirements.txt
+# Use our bootstrapped uv binary to sync packages into the system space
+RUN --mount=type=cache,target=/root/.cache/uv \
+    /bin/uv pip install --system -r requirements.txt
 
-# Copy application layers and model binaries
-COPY ./app ./app
-COPY ./artifacts ./artifacts
+# Minimal production execution stage
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Copy the completely built packages from the builder stage over
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+COPY . .
 
 EXPOSE 8000
 

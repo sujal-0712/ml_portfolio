@@ -1,42 +1,11 @@
-# =====================================================================
-# CENTRALIZED API DATA GATEWAY & RUNTIME SCHEMAS
-# =====================================================================
 from pydantic import BaseModel, Field, field_validator
 from typing import Literal
 
-# ---------------------------------------------------------------------
-# 1. REAL ESTATE REGRESSION MODULE (Project #1)
-# ---------------------------------------------------------------------
-class HousingValuationSchema(BaseModel):
-    MedInc: float = Field(..., ge=0.5, le=15.0, description="Median income in tens of thousands.")
-    HouseAge: float = Field(..., ge=1.0, le=52.0)
-    AveRooms: float = Field(..., ge=1.0, le=15.0)
-    AveBedrms: float = Field(..., ge=0.5, le=10.0)
-    Population: float = Field(..., ge=3.0, le=35000.0)
-    AveOccup: float = Field(..., ge=1.0, le=10.0)
-    Latitude: float = Field(..., ge=32.0, le=42.0)
-    Longitude: float = Field(..., le=-114.0, ge=-125.0)
-
-
-# ---------------------------------------------------------------------
-# 2. CLINICAL DIABETES DETECTION MODULE (Project #2)
-# ---------------------------------------------------------------------
-class ClinicalDiabetesSchema(BaseModel):
-    Pregnancies: int = Field(..., ge=0, le=20)
-    Glucose: float = Field(..., ge=0.0, le=300.0)
-    BloodPressure: float = Field(..., ge=0.0, le=200.0)
-    SkinThickness: float = Field(..., ge=0.0, le=100.0)
-    Insulin: float = Field(..., ge=0.0, le=900.0)
-    BMI: float = Field(..., ge=0.0, le=70.0)
-    DiabetesPedigreeFunction: float = Field(..., ge=0.0, le=3.0)
-    Age: int = Field(..., ge=21, le=120, description="Clinical trial focuses on adult profiles.")
-
-
-# ---------------------------------------------------------------------
-# 3. FINTECH CREDIT RISK SCORING MODULE (Project #3)
-# ---------------------------------------------------------------------
-class CreditApplicationSchema(BaseModel):
-    person_age: int = Field(..., ge=18, le=120)
+# =====================================================================
+# 1. FINTECH CREDIT RISK VALIDATION SCHEMA
+# =====================================================================
+class CreditPayload(BaseModel):
+    person_age: int = Field(..., ge=18, le=120, description="Borrower age.")
     person_income: float = Field(..., ge=0.0)
     person_home_ownership: Literal['RENT', 'MORTGAGE', 'OWN', 'OTHER']
     person_emp_length: float = Field(..., ge=0.0, le=60.0)
@@ -50,16 +19,50 @@ class CreditApplicationSchema(BaseModel):
 
     @field_validator('person_income', 'loan_amnt')
     @classmethod
-    def enforce_positive_economics(cls, value: float) -> float:
+    def enforce_nonzero_economics(cls, value: float) -> float:
         if value <= 0:
-            raise ValueError("Financial fields must be greater than zero.")
+            raise ValueError("Financial parameters must represent positive numeric values.")
         return value
 
+# =====================================================================
+# 2. BIOTECH CLINICAL DIABETES READMISSION SCHEMA
+# =====================================================================
+class DiabetesPayload(BaseModel):
+    time_in_hospital: int = Field(..., ge=1, le=14)
+    num_lab_procedures: int = Field(..., ge=1, le=150)
+    num_procedures: int = Field(..., ge=0, le=10)
+    num_medications: int = Field(..., ge=1, le=100)
+    number_outpatient: int = Field(..., ge=0, le=50)
+    number_emergency: int = Field(..., ge=0, le=50)
+    number_inpatient: int = Field(..., ge=0, le=50)
+    number_diagnoses: int = Field(..., ge=1, le=20)
+    race: Literal['Caucasian', 'AfricanAmerican', 'Unknown', 'Other', 'Asian', 'Hispanic']
+    gender: Literal['Female', 'Male', 'Unknown']
+    age: Literal['[0-10)', '[10-20)', '[20-30)', '[30-40)', '[40-50)', '[50-60)', '[60-70)', '[70-80)', '[80-90)', '[90-100)']
+    metformin: Literal['No', 'Steady', 'Up', 'Down']
+    insulin: Literal['No', 'Steady', 'Up', 'Down']
+    change: Literal['No', 'Ch']
+    diabetesMed: Literal['No', 'Yes']
 
-# ---------------------------------------------------------------------
-# 4. SAAS RETENTION OPTIMIZATION MODULE (Project #4)
-# ---------------------------------------------------------------------
-class CustomerBehaviorSchema(BaseModel):
+# =====================================================================
+# 3. E-COMMERCE SHIPPING LATE DELIVERY RISK SCHEMA
+# =====================================================================
+class ShippingPayload(BaseModel):
+    Warehouse_block: Literal['A', 'B', 'C', 'D', 'F']
+    Mode_of_Shipment: Literal['Ship', 'Flight', 'Road']
+    Customer_care_calls: int = Field(..., ge=2, le=10)
+    Customer_rating: int = Field(..., ge=1, le=5)
+    Cost_of_the_Product: float = Field(..., ge=50.0, le=1000.0)
+    Prior_purchases: int = Field(..., ge=2, le=20)
+    Product_importance: Literal['low', 'medium', 'high']
+    Gender: Literal['F', 'M']
+    Discount_offered: float = Field(..., ge=0.0, le=100.0)
+    Weight_in_gms: float = Field(..., ge=500.0, le=15000.0)
+
+# =====================================================================
+# 4. ENTERPRISE CONSUMER RETENTION/CHURN SCHEMA
+# =====================================================================
+class ChurnPayload(BaseModel):
     CreditScore: int = Field(..., ge=300, le=850)
     Geography: Literal['France', 'Spain', 'Germany']
     Gender: Literal['Female', 'Male']
@@ -70,10 +73,3 @@ class CustomerBehaviorSchema(BaseModel):
     HasCrCard: Literal[0, 1]
     IsActiveMember: Literal[0, 1]
     EstimatedSalary: float = Field(..., ge=0.0)
-
-    @field_validator('EstimatedSalary')
-    @classmethod
-    def validate_earnings_floor(cls, value: float) -> float:
-        if value < 0:
-            raise ValueError("Compensation tracks cannot fall below zero.")
-        return value

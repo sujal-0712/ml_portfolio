@@ -1,43 +1,43 @@
 version: '3.8'
 
 services:
-  # -------------------------------------------------------------------
-  # FASTAPI BACKEND INFERENCE SERVICE
-  # -------------------------------------------------------------------
-  backend:
+  # =====================================================================
+  # 1. CORE BACKEND ML PREDICTION ENGINE (FastAPI)
+  # =====================================================================
+  backend-api:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: ml_inference_backend
+    container_name: unified_ml_backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/app:/workspace/app
-    restart: unless-stopped
-    networks:
-      - platform_network
+      # Live mounts your development code into the container
+      - ./backend:/app
+      # Prevents container-generated python artifacts from overwriting host files
+      - /app/app/__pycache__
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=production
+    restart: always
 
-  # -------------------------------------------------------------------
-  # FLASK USER INTERFACE FRONTEND SERVICE
-  # -------------------------------------------------------------------
-  frontend:
+  # =====================================================================
+  # 2. CLIENT WEB INTERFACE & FORMS GATEWAY (Flask)
+  # =====================================================================
+  frontend-dashboard:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: flask_web_frontend
+    container_name: unified_ml_frontend
     ports:
       - "5000:5000"
-    volumes:
-      - ./frontend/app:/workspace/app
-      - ./frontend/templates:/workspace/templates
     environment:
-      - BACKEND_URL=http://backend:8000
+      - PYTHONUNBUFFERED=1
+      # Directs the Flask app proxy to talk to the backend container over internal DNS bridge
+      - BACKEND_SERVICE_URL=http://backend-api:8000
+    volumes:
+      - ./frontend:/app
+    # Tells Docker to ensure the FastAPI model server is completely up before booting the frontend UI
     depends_on:
-      - backend
-    restart: unless-stopped
-    networks:
-      - platform_network
-
-networks:
-  platform_network:
-    driver: bridge
+      - backend-api
+    restart: always

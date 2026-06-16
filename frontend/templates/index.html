@@ -2,102 +2,119 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise ML Inference Platform</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Enterprise Analytics Core Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 border-b border-slate-800 pb-4">
+            <h1 class="text-3xl font-extrabold text-emerald-400 tracking-tight">Enterprise ML Analytics Platform</h1>
+            <p class="text-slate-400 text-sm">Unified multi-tenant interface orchestrating your 4 project channels</p>
+        </header>
 
-    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white tracking-wider text-sm">ML</div>
-                <span class="font-semibold text-lg tracking-tight">Unified Inference Gateway</span>
-            </div>
-            <span class="text-xs px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20 font-medium">Cluster Active</span>
-        </div>
-    </header>
+        <nav class="flex space-x-2 mb-6 bg-slate-800 p-1.5 rounded-lg border border-slate-700">
+            <a href="/?project=credit" class="flex-1 text-center py-2 text-sm font-semibold rounded transition {% if project == 'credit' %}bg-emerald-500 text-slate-950{% else %}hover:bg-slate-700 text-slate-400{% endif %}">FinTech Credit Risk</a>
+            <a href="/?project=diabetes" class="flex-1 text-center py-2 text-sm font-semibold rounded transition {% if project == 'diabetes' %}bg-emerald-500 text-slate-950{% else %}hover:bg-slate-700 text-slate-400{% endif %}">Biotech Diabetes</a>
+            <a href="/?project=shipping" class="flex-1 text-center py-2 text-sm font-semibold rounded transition {% if project == 'shipping' %}bg-emerald-500 text-slate-950{% else %}hover:bg-slate-700 text-slate-400{% endif %}">Logistics Shipping</a>
+            <a href="/?project=churn" class="flex-1 text-center py-2 text-sm font-semibold rounded transition {% if project == 'churn' %}bg-emerald-500 text-slate-950{% else %}hover:bg-slate-700 text-slate-400{% endif %}">SaaS Churn</a>
+        </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-12">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl bg-gradient-to-r from-indigo-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent">
-                Multi-Model Predictive Systems
-            </h1>
-            <p class="mt-4 text-lg text-slate-400">
-                A centralized enterprise architecture hosting production-grade machine learning pipelines behind automated input validation and schema contracts.
-            </p>
-        </div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}<div class="bg-rose-500/20 border border-rose-500 text-rose-300 p-4 rounded-lg mb-6 text-xs font-mono">{% for m in messages %}{{ m }}{% endfor %}</div>{% endif %}
+        {% endwith %}
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <div class="group relative rounded-2xl border border-slate-800 bg-slate-950 p-8 hover:border-indigo-500/50 transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="h-12 w-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
-                        🏠
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-200 mb-2">Real Estate Valuation</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                        Calculates optimized market values for geographic zones using continuous spatial data, demographic tracking vectors, and structural variables via localized linear pipelines.
-                    </p>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <form method="POST" class="lg:col-span-2 bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <input type="hidden" name="_target_project_type" value="{{ project }}">
+                <h2 class="text-md font-bold text-slate-300 uppercase tracking-wider mb-4">Execute Feature Extraction Matrix</h2>
+
+                {% if project == 'credit' %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Age</label><input type="number" name="person_age" value="25" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Annual Income ($)</label><input type="number" name="person_income" value="55000" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Home Status</label><select name="person_home_ownership" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="RENT">RENT</option><option value="MORTGAGE">MORTGAGE</option><option value="OWN">OWN</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Emp Depth (Yrs)</label><input type="number" step="any" name="person_emp_length" value="2.0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Loan Intent</label><select name="loan_intent" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="PERSONAL">PERSONAL</option><option value="EDUCATION">EDUCATION</option><option value="MEDICAL">MEDICAL</option><option value="VENTURE">VENTURE</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Risk Grade</label><select name="loan_grade" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Loan Amount ($)</label><input type="number" name="loan_amnt" value="10000" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Interest Rate (%)</label><input type="number" step="any" name="loan_int_rate" value="9.5" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Income Ratio</label><input type="number" step="any" name="loan_percent_income" value="0.15" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Prior Default File</label><select name="cb_person_default_on_file" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="N">No</option><option value="Y">Yes</option></select></div>
+                    <div class="col-span-2"><label class="text-xs font-bold text-slate-400 uppercase">Credit History Length (Yrs)</label><input type="number" name="cb_person_cred_hist_length" value="3" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
                 </div>
-                <a href="/housing" class="inline-flex items-center justify-center px-4 py-2.5 bg-slate-900 border border-slate-800 hover:border-indigo-500 hover:bg-indigo-600/10 rounded-xl text-sm font-semibold text-indigo-400 hover:text-indigo-200 transition-all duration-200 w-full">
-                    Launch Model Interface
-                </a>
-            </div>
 
-            <div class="group relative rounded-2xl border border-slate-800 bg-slate-950 p-8 hover:border-sky-500/50 transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="h-12 w-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 font-bold mb-6 group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
-                        🩺
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-200 mb-2">Clinical Diabetes Analytics</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                        Processes physiological markers to evaluate chronic risk profiles. Leverages class-balanced gradient boosting to maximize diagnostic sensitivity and clinical target recall.
-                    </p>
+                {% elif project == 'diabetes' %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Days In Hospital</label><input type="number" name="time_in_hospital" value="3" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Lab Procedures Count</label><input type="number" name="num_lab_procedures" value="38" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Non-Lab Procedures</label><input type="number" name="num_procedures" value="2" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Total Medications</label><input type="number" name="num_medications" value="12" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Outpatient Encounters</label><input type="number" name="number_outpatient" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Emergency Encounters</label><input type="number" name="number_emergency" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Inpatient Encounters</label><input type="number" name="number_inpatient" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Diagnoses Recorded</label><input type="number" name="number_diagnoses" value="5" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Demographic Race</label><select name="race" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="Caucasian">Caucasian</option><option value="AfricanAmerican">AfricanAmerican</option><option value="Asian">Asian</option><option value="Unknown">Unknown</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Gender</label><select name="gender" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="Female">Female</option><option value="Male">Male</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Age Interval</label><select name="age" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="[40-50)">[40-50)</option><option value="[50-60)">[50-60)</option><option value="[70-80)">[70-80)</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Metformin Log</label><select name="metformin" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="No">No</option><option value="Steady">Steady</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Insulin Prescription</label><select name="insulin" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="No">No</option><option value="Steady">Steady</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Dosage Shift Status</label><select name="change" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="No">No</option><option value="Ch">Ch</option></select></div>
+                    <div class="col-span-2"><label class="text-xs font-bold text-slate-400 uppercase">Diabetes Med Administered</label><select name="diabetesMed" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="Yes">Yes</option><option value="No">No</option></select></div>
                 </div>
-                <a href="/diabetes" class="inline-flex items-center justify-center px-4 py-2.5 bg-slate-900 border border-slate-800 hover:border-sky-500 hover:bg-sky-600/10 rounded-xl text-sm font-semibold text-sky-400 hover:text-sky-200 transition-all duration-200 w-full">
-                    Launch Model Interface
-                </a>
-            </div>
 
-            <div class="group relative rounded-2xl border border-slate-800 bg-slate-950 p-8 hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="h-12 w-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
-                        💳
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-200 mb-2">Enterprise Credit Assessment</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                        Simulates operational risk boundaries for consumer loan applications. Features multi-channel matrix transformations paired with a tracked XGBoost engine.
-                    </p>
+                {% elif project == 'shipping' %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Warehouse Block</label><select name="Warehouse_block" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="F">F</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Transport Configuration</label><select name="Mode_of_Shipment" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="Ship">Ship</option><option value="Flight">Flight</option><option value="Road">Road</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Customer Care Calls</label><input type="number" name="Customer_care_calls" value="3" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Customer Evaluation Score</label><input type="number" name="Customer_rating" value="4" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Item Fair Value ($)</label><input type="number" step="any" name="Cost_of_the_Product" value="210.0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Prior Orders Count</label><input type="number" name="Prior_purchases" value="2" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Fulfillment Priority</label><select name="Product_importance" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Buyer Sex Profile</label><select name="Gender" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="F">F</option><option value="M">M</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Discount Offered Metrics ($)</label><input type="number" step="any" name="Discount_offered" value="10.0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Freight Weight (Grams)</label><input type="number" step="any" name="Weight_in_gms" value="3200" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
                 </div>
-                <a href="/credit" class="inline-flex items-center justify-center px-4 py-2.5 bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-emerald-600/10 rounded-xl text-sm font-semibold text-emerald-400 hover:text-emerald-200 transition-all duration-200 w-full">
-                    Launch Model Interface
-                </a>
-            </div>
 
-            <div class="group relative rounded-2xl border border-slate-800 bg-slate-950 p-8 hover:border-amber-500/50 transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold mb-6 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
-                        📊
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-200 mb-2">Retention & Churn Optimization</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                        Tracks and profiles consumer platform attrition vectors. Isolates behavioral anomalies to deliver real-time metrics for customer lifecycle management.
-                    </p>
+                {% elif project == 'churn' %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Credit Rating Index</label><input type="number" name="CreditScore" value="600" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Regional Segment</label><select name="Geography" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="France">France</option><option value="Spain">Spain</option><option value="Germany">Germany</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Gender</label><select name="Gender" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="Female">Female</option><option value="Male">Male</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Age</label><input type="number" name="Age" value="35" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Tenure Depth (Yrs)</label><input type="number" name="Tenure" value="4" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Ledger Holding Balance ($)</label><input type="number" step="any" name="Balance" value="12000.0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Subscribed Products Active</label><input type="number" name="NumOfProducts" value="1" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Has Credit Instrument</label><select name="HasCrCard" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="1">Yes</option><option value="0">No</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Is Active Engagement Member</label><select name="IsActiveMember" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"><option value="1">Yes</option><option value="0">No</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-400 uppercase">Estimated Compensation ($)</label><input type="number" step="any" name="EstimatedSalary" value="85000.0" required class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></div>
                 </div>
-                <a href="/churn" class="inline-flex items-center justify-center px-4 py-2.5 bg-slate-900 border border-slate-800 hover:border-amber-500 hover:bg-amber-600/10 rounded-xl text-sm font-semibold text-amber-400 hover:text-amber-200 transition-all duration-200 w-full">
-                    Launch Model Interface
-                </a>
-            </div>
+                {% endif %}
 
+                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 font-bold p-3 rounded text-slate-950 transition">Compute Analytical Inference Profile</button>
+            </form>
+
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 h-fit space-y-6">
+                <h3 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Decision Output Node</h3>
+                {% if result %}
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1">Target Binary Classification Variant</span>
+                            <span class="bg-slate-900 text-white font-mono border border-slate-700 px-3 py-1.5 rounded text-sm block text-center font-bold">VERDICT SIGNAL: {{ result.prediction }}</span>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block">Asymmetric Matrix Loss Confidence Value</span>
+                            <div class="text-3xl font-extrabold font-mono text-white mt-1">{{ (result.risk_score_probability * 100) | round(2) }}%</div>
+                            <div class="w-full bg-slate-900 h-2 rounded-full mt-2 overflow-hidden">
+                                <div class="bg-emerald-400 h-full transition-all" style="width: {{ result.risk_score_probability * 100 }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-16 text-slate-500 text-sm">Await structural data payload execution mapping telemetry...</div>
+                {% endif %}
+            </div>
         </div>
-    </main>
-
-    <footer class="border-t border-slate-800 mt-24 bg-slate-950/30">
-        <div class="max-w-7xl mx-auto px-4 py-6 text-center text-xs text-slate-500">
-            Distributed Production MLOps Architecture Stack
-        </div>
-    </footer>
-
+    </div>
 </body>
 </html>

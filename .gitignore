@@ -1,44 +1,33 @@
-# =====================================================================
-# UNIFIED ML PLATFORM GATEWAY - PRODUCTION GITIGNORE
-# =====================================================================
-
-# 1. Python Execution & Bytecode Caches
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
+*.py[cod]
+*$py.class
+
+# Environments and dependencies
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
+venv/
+ENV/
+env/
+build/
+dist/
+*.egg-info/
 
-# 2. Local Logging & Operational Subsystems
-*.log
-mlflow_execution.log
-mlflow_exceptions.log
-mlflow_production.log
-mlflow_errors.log
-
-# 3. Local Databases & MLOps State Tracking
-mlflow.db
-mlruns/
-.mlflow/
-
-# 4. OS Specific Metadata System Files
+# Virtualization and OS artifacts
 .DS_Store
-.DS_Store?
-._*
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# 5. IDE Configurations
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# 6. Container Runtime States
 .docker/
+
+# Platform Data/Model Registry Exclusions
+# We explicitly block tracking logs and data mirrors to optimize git pushing speed
+backend/mlflow.db
+backend/mlflow/
+backend/outputs/
+# Ensure the data directory structure itself is tracked
+!data/
+
+# Explicitly whitelist your evaluation datasets so Git tracks them
+!data/Churn_Modelling.csv
+!data/credit_risk_dataset.csv
+!data/diabetic_data.csv
+!data/housing.csv
+
