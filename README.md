@@ -45,4 +45,6 @@ unified-ml-platform/
 │   ├── templates/            # Dynamic Tailwind HTML dashboard interfaces
 │   └── Dockerfile            # Ultra-lightweight Flask worker deployment script
 │
-└── docker-compose.yml        # Internal bridge network orchestrator
+├── docker-compose.yml        # Internal bridge network orchestrator
+├── data/                    # contain all the csv file used for training
+├── assets/                   # conatin all the jupyter notebook code for model training 
